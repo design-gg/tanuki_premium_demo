@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Premium Bar / проверка поведения</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#333;background:#f3f3f3}
+header{padding:24px;max-width:900px;margin:auto}section{max-width:900px;margin:auto;padding:30px 24px;border-top:1px solid #ddd;min-height:60vh;background:white}
+#placement{position:fixed;left:0;right:0;bottom:0;height:200px;pointer-events:none;z-index:10;overflow:visible}
+#creative{height:200px;width:100%;border:0;display:block;pointer-events:auto;background:transparent}
+small{display:block;color:#777;margin-top:10px}
+</style></head><body>
+<header><h1>Premium Bar - тестовая страница</h1><p>После загрузки баннер раскрыт, через 3 секунды схлопывается. Прокрути страницу вниз, затем вернись вверх. На телефоне проведи пальцем вверх непосредственно по баннеру.</p><small>При встраивании на реальном сайте обработчик прокрутки размещается на родительской странице.</small></header>
+<section><h2>Первый экран</h2><p>Прокрутка вниз закрывает, возврат вверх раскрывает баннер.</p></section>
+<section><h2>Второй экран</h2><p>Тест свайпов и направления прокрутки.</p></section>
+<section><h2>Третий экран</h2><p>Демонстрационный контент.</p></section>
+<div id="placement"><iframe id="creative" src="index.html" title="Premium Bar"></iframe></div>
+<script>
+// Integration test: parent owns the page-scroll logic, iframe owns visuals.
+const frame = document.querySelector('#creative');
+let ready = false, lastY = window.scrollY, accumulated = 0, intended = 'expanded';
+function send(type) {
+  if (!ready) return;
+  frame.contentWindow.postMessage({type}, '*');
+}
+function change(next) {
+  if (next === intended) return;
+  intended = next;
+  send(next === 'expanded' ? 'premiumbar-expand' : 'premiumbar-collapse');
+}
+frame.addEventListener('load', () => {
+  ready = true;
+  frame.contentWindow.postMessage({type:'premiumbar-set-mode',mode:'host'}, '*');
+  // First load is expanded, then automatically collapses after 3 seconds.
+  setTimeout(() => change('collapsed'), 3000);
+});
+// Accumulate real scroll movement; ignore tiny jitter near a stopped touchpad.
+window.addEventListener('scroll', () => {
+  const now = window.scrollY;
+  const delta = now - lastY;
+  lastY = now;
+  if (!delta) return;
+  if (Math.sign(delta) !== Math.sign(accumulated)) accumulated = 0;
+  accumulated += delta;
+  if (accumulated > 42) { change('collapsed'); accumulated = 0; }
+  if (accumulated < -42) { change('expanded'); accumulated = 0; }
+}, {passive:true});
+</script></body></html>

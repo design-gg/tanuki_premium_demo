@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="ad.size" content="width=600,height=100">	
+	<title>OLV_premium_bar_tornado</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+	<style>		
+		body {color:#fff}
+		* {
+			box-sizing: border-box;
+		}
+		button {
+			padding: 0;
+			border: 0;
+			appearance: none;
+			background: none;
+			cursor: pointer;
+		}
+		.nowrap {
+			white-space: nowrap;
+		}
+		.PremiumBarGG {
+			--c1: #EDFC36;
+			--wDesk: 600px;
+			--wMob: 300px;
+			background: none;
+			font-family: "Golos Text", Arial, sans-serif;
+			font-weight: 400;
+			text-decoration: none;
+			color: inherit;
+			height: 60px;
+			display: flex;
+			align-items: flex-end;
+            position: relative;
+			scale: 1 0;
+		}
+		.PremiumBarGG.PremiumBarGG-showup {
+			scale: 1 1;
+		}
+		/* The checkerboard is a permanent layer, so its height animates smoothly. */
+		.PremiumBarGG::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 60px;
+			background-image: url("img/bg.png");
+			background-repeat: repeat;
+			background-size: 20px auto;
+			pointer-events: none;
+			z-index: 0;
+			transition: height .5s ease;
+		}
+		.PremiumBarGG-inner {
+			position: relative;
+			z-index: 1;
+		}
+		.PremiumBarGG-inner {
+			width: var(--wDesk);			
+			margin-inline: auto;
+			display: flex;
+			flex-direction: row;
+			align-items: flex-end;
+			gap: 0px;						
+		}
+		.PremiumBarGG-logo {
+			background-image: url("img/logo.svg");
+			background-repeat: no-repeat;
+			background-size: contain;			
+			width: 75px;
+			aspect-ratio: 75 / 38;
+			position: absolute;
+		}		
+		.PremiumBarGG-title1 {
+			background-image: url("img/title1.svg");
+			background-repeat: no-repeat;
+			background-size: contain;			
+			position: absolute;		
+			aspect-ratio: 21 / 9;
+			opacity: 0;
+		}
+		.PremiumBarGG-title2 {
+			background-image: url("img/title2.svg");
+			background-repeat: no-repeat;
+			background-size: contain;			
+			position: absolute;	
+			aspect-ratio: 131 / 37;		
+			opacity: 0;
+		}
+		
+		.PremiumBarGG-video {
+			background: url("img/screen.png");
+			background-repeat: no-repeat;
+			background-size: 100% 100%;			
+			aspect-ratio: 89 / 50;
+			position: relative;
+			z-index: 0;
+			overflow: hidden;
+			border-top-left-radius: 22px;
+		}
+		.PremiumBarGG-button {
+            position: absolute;
+            display: block;
+            background: url("img/button.png") center / contain no-repeat;
+            border-radius: 0;
+            aspect-ratio: 130 / 28;
+            z-index: 3;
+            transition: width .5s, opacity .3s;
+        }
+        .PremiumBarGG-video video {
+			display: block;
+			aspect-ratio: 89 / 50;
+			width: 100%;						
+		}
+		.PremiumBarGG-about {
+			flex-grow: 1;
+			background-color: var(--c1);
+			height: 80px;
+			position: relative;
+			padding-inline: 12px;
+			z-index: 0;
+			overflow: hidden;
+			border-top-right-radius: 22px;
+		}
+		.PremiumBarGG-price {
+			position: absolute;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			pointer-events: none;
+			z-index: 2;
+		}
+		.PremiumBarGG-price {
+			background-image: url("img/price.svg");
+		}
+								
+		.PremiumBarGG-zeroplus {
+			width: 18px;
+			aspect-ratio: 1;
+			background-image: url("img/zeroplus.svg");
+			background-size: cover;
+			position: absolute;
+			right: 8px;
+			bottom: 6px;
+			z-index: 4;
+		}
+		.PremiumBarGG-mute {
+			position: absolute;
+			width: 15px;
+			aspect-ratio: 1;
+			z-index: 1;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: contain;
+			top: 3px;
+			right: 3px;
+		}
+		.mute-off {
+			background-image: url("img/mute-off.svg");
+		}
+		.mute-on {
+			background-image: url("img/mute-on.svg");
+		}
+
+		.PremiumBarGG {
+			transition: height .5s;
+		}		
+		.PremiumBarGG.PremiumBarGG-showup {
+			transform-origin: center 100%;
+			transition: height .5s, scale .5s;
+		}		
+		.PremiumBarGG-video,
+		.PremiumBarGG-about {
+			transition: height .5s;
+		}
+		.PremiumBarGG-ligal {
+			font-size: 6px;
+			position: absolute;
+			right: 12px;
+			bottom: 4px;
+			color: #000;
+		}
+		
+		/* DESKTOP (>=600px): STATE 1 collapsed, STATE 2 expanded */
+		@media (min-width:600px) {
+			.mob {
+				display: none;
+			}
+			.PremiumBarGG-video {
+				height: 100px;
+				border-radius: 30px; 
+			}
+			.PremiumBarGG-inner {
+    			width: 600px;
+    			padding-left: 25px;
+    			border-radius: 30px 30px 0 0;
+    			overflow: hidden;
+			}
+			.PremiumBarGG-about-inner {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				gap: 0 20px;
+				align-items: center;
+				height: 100%;
+				opacity: 1;
+				transition: opacity .5s 0s;
+			}			
+			.PremiumBarGG-button {
+				opacity: 1;
+				width: 114px;
+				height: 26px;
+				font-size: 10px;
+				transition: opacity .5s;
+				right: 22px;
+				bottom: 4px;
+			}
+			.PremiumBarGG-price {
+				width: 82px;
+				height: 56px;
+				right: 6px;
+				top: -4px;
+			}
+
+			.PremiumBarGG-title1 {
+				width: 150px;
+				left: 60px;
+				top: 8px;
+				translate: 0 -27px;				
+			}
+			.PremiumBarGG-title2 {
+				width: 150px;
+				left: 60px;
+				top: 45px;
+				translate: 0 -27px;
+			}			
+			.PremiumBarGG-title1, 
+			.PremiumBarGG-title2 {
+				transition: opacity .4s, translate .4s;
+			}
+			.PremiumBarGG-logo {
+				top: 12px;
+				left: 18px;
+				scale: 1;
+				opacity: 1;
+				translate: 0 0;
+				transition: translate .6s, opacity 1s, scale .8s;
+			}
+			.PremiumBarGG .PremiumBarGG-video,
+			.PremiumBarGG .PremiumBarGG-about {
+				will-change: height;
+			}
+			
+
+			/* showup */
+			.PremiumBarGG-showup .PremiumBarGG-title1,
+			.PremiumBarGG-showup .PremiumBarGG-title2 {
+				opacity: 1;
+				translate: 0 0;
+			}
+			.PremiumBarGG-showup .PremiumBarGG-title1 {
+				transition-delay: .1s;
+			}
+			.PremiumBarGG-showup .PremiumBarGG-title2 {
+				transition-delay: .2s;
+			}
+
+			
+			/* STATE 2 / DESKTOP EXPANDED (also initial state) */ 
+			.PremiumBarGG.is-expanded {
+				height: 200px;
+				overflow: visible;
+				background-image: none;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-inner {
+				overflow: visible;
+				height: 200px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-video,
+			.PremiumBarGG.is-expanded .PremiumBarGG-about {
+				height: 200px;
+
+			}
+
+			.PremiumBarGG.is-expanded .PremiumBarGG-video {
+				border:0.6px solid #fff;
+				border-radius: 15px;				
+				top: auto;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-about-inner {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 10px;
+				/*padding-top: 15px;*/
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-logo {
+				top: 14px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-title1 {
+				left: 112px;
+				top: 12px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-title2 {
+				left: 112px;
+				top: 62px;
+			}
+				
+			.PremiumBarGG.is-expanded .PremiumBarGG-button {
+				opacity: 1;
+				top: auto;
+				right: 28px;
+				bottom: 10px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-price {
+				width: 96px;
+				height: 65px;
+				right: 16px;
+				top: 10px;
+			}
+
+
+
+            /* DESKTOP: shared geometry refinements */
+            .PremiumBarGG-inner {
+                position: relative;
+                width: 600px;
+                padding-left: 25px;
+                border-radius: 0;
+                overflow: visible;
+                isolation: isolate;
+            }
+            .PremiumBarGG-inner::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 80px;
+                background: var(--c1);
+                border-radius: 36px 36px 0 0;
+                z-index: -1;
+                pointer-events: none;
+                transition: height .5s;
+            }
+            .PremiumBarGG-video {
+                flex: 0 0 178px;
+                width: 178px;
+                height: 100px;
+                margin: 0;
+                transform: none;
+                border-radius: 0;
+                z-index: 1;
+            }
+            .PremiumBarGG-video video { height: 100%; object-fit: cover; }
+            .PremiumBarGG-about {
+                flex: 1 1 0;
+                min-width: 0;
+                background: transparent;
+                border-radius: 0;
+                overflow: visible;
+                padding: 0 10px;
+                height: 80px;
+                z-index: 2;
+            }
+            .PremiumBarGG-about-inner { padding: 0; }
+            .PremiumBarGG-logo { left: 16px; top: 8px; width: 65px; }
+            .PremiumBarGG-title1 {
+                left: 96px; top: -18px; width: 150px;
+                aspect-ratio: 211 / 89;
+            }
+            .PremiumBarGG-title2 { left: 96px; top: 38px; width: 150px; }
+            .PremiumBarGG-price {
+                width: 100px; height: 68px;
+                top: -18px; right: -2px;
+                z-index: 5;
+            }
+
+            .PremiumBarGG-button {
+                right: 34px; bottom: 4px;
+                width: 110px; height: 24px;
+            }
+            .PremiumBarGG-ligal {
+                right: auto; left: 16px; bottom: 2px;
+                white-space: nowrap;
+                font-size: 7px;
+            }
+            .PremiumBarGG-zeroplus { right: 10px; bottom: 4px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner {
+                overflow: visible;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner::before { height: 200px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-video {
+                flex: 0 0 265px;
+                width: 265px;
+                height: 149px;
+                margin-bottom: 25px;
+                border: none;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-about {
+                height: 200px;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-logo { left: 13px; top: 20px; width: 75px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-title1 {left: 13px; top: 25px; width: 225px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-title2 { left: 13px; top: 110px; width: 235px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-price {width: 107px; height: 73px; top: 7px; right: 0;
+            }
+
+            .PremiumBarGG.is-expanded .PremiumBarGG-button { left: 13px; bottom: 17px; width: 120px; height: 29px; }
+        
+
+
+
+            .PremiumBarGG-showup .PremiumBarGG-price {
+                animation: pb-price-pop .95s .65s both;
+            }
+
+            .PremiumBarGG.is-expanded .PremiumBarGG-price {
+                animation: pb-price-pop .85s .12s both;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-video {
+                align-self: flex-end;
+                border-radius: 20px;
+            }
+            .PremiumBarGG-about-inner { position: relative; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-ligal {
+                left: 16px;
+                bottom: 4px;
+                font-size: 7px;
+            }
+        
+
+            /* Button PNG, native ratio 130:28 */
+            .PremiumBarGG-button {
+                width: 90px;
+                height: auto;
+                aspect-ratio: 130 / 28;
+                opacity: 1;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-button,
+            .PremiumBarGG-hovered.PremiumBarGG.is-expanded .PremiumBarGG-button {
+                width: 130px;
+                height: auto;
+                opacity: 1;
+                right: 42px;
+            }
+            /* On desktop, animate the white checkerboard to 180px.
+               The yellow creative and overall ad space remain 200px. */
+            .PremiumBarGG.is-expanded { height: 200px; }
+            .PremiumBarGG.is-expanded::before {height: 180px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner { height: 200px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-about { height: 200px; }
+
+}
+        /* MOBILE (<=599px): STATE 3 collapsed, STATE 4 expanded */
+        @media (max-width:599px) {
+            /* Shared mobile checkerboard remains on the animatable ::before layer. */
+			.desk {
+				display: none;
+			}
+			.PremiumBarGG-inner {
+				width: var(--wMob);	
+				display: flex;	
+				position: relative;
+				height: 80px;
+			}			
+			.PremiumBarGG-about {
+				height: 70px;
+				padding-inline: 5px;
+				margin-left: 142px;
+				transition: margin-left .5s, width .5s, height .5s;
+				border-radius: 30px 30px 0 0;
+			}
+			.PremiumBarGG-about-inner {
+				height: 100%;
+			}
+			.PremiumBarGG-logo {
+				width: 38px;
+				left: 12px;
+				top: 4px;
+			}						
+			.PremiumBarGG-title1 {
+				width: 85px;
+				left: 12px;
+				top: 12px;
+				opacity: 1;
+			}
+			.PremiumBarGG-title2 {
+				width: 87px;
+				left:12px;
+				top: 44px;
+				opacity: 1;
+			} 
+			.PremiumBarGG-ligal {
+				bottom: 5px;
+				width: 120px;
+				left: 12px;
+				line-height: 1em;
+			}
+			.PremiumBarGG-button {
+				width: 78px;
+				height: 20px;
+				opacity: 1;
+					right: 8px;
+				bottom: 8px;
+			}
+			.PremiumBarGG-price {
+				width: 64px;
+				height: 43px;
+				right: -8px;
+				top: -4px;
+			}
+
+			.PremiumBarGG-video {
+				width: 142px;
+				aspect-ratio: 16 / 9;
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				z-index: 1;
+				transition: width .5s, left .5s;
+			}
+
+			
+			
+			/* STATE 4 / MOBILE EXPANDED */
+			.PremiumBarGG.is-expanded {
+				height: 180px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-inner {
+				display: block;
+				height: auto;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-about-inner {
+				/* visibility: hidden;			 */
+			}						
+			.PremiumBarGG.is-expanded .PremiumBarGG-about {
+				margin-left: 0;
+				width: 300px;
+				height: 200px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-video {
+				width: 250px;
+				left: 25px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-title1 {
+				top: 140px;
+				left: 85px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-title2 {
+				top: 172px;
+				left: 85px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-zeroplus {
+				width: 14px;
+			}
+			.PremiumBarGG.is-expanded .PremiumBarGG-price {
+				display: none;
+			}			
+			.PremiumBarGG.is-expanded .PremiumBarGG-ligal {
+				width: 204px;
+			}
+			
+			.PremiumBarGG.is-expanded .PremiumBarGG-logo {
+				background-image: url("img/logo.svg");
+				width: 45px;
+				left: 20px;
+				top: 160px;
+				position: absolute;
+				z-index: 0;
+			}						
+			.PremiumBarGG.is-expanded .PremiumBarGG-button {
+				top: 120px;
+				position: absolute;
+				z-index: 3;
+				opacity: 1 !important;
+				left: 206px;
+				width: 84px;
+			}
+
+
+		
+            /* STATE 3 / MOBILE COLLAPSED */
+            .PremiumBarGG-button { width:90px; height:auto; aspect-ratio:130/28; opacity:0; }
+            /* STATE 4 / MOBILE EXPANDED */
+            .PremiumBarGG.is-expanded .PremiumBarGG-button {
+                width:90px; height:auto; aspect-ratio:130/28;
+                opacity:1; left: 198px; top:160px;
+            }
+
+
+}
+	
+        /* Desktop layout: one yellow rounded 600px base, video inset 25px.
+           All visible content in the collapsed 600x100 state is inside 100px. */
+        
+
+        /* Creative polish only: no changes to iframe integration or structural grid. */
+        .PremiumBarGG-video {
+            box-shadow: 0 2px 12px rgba(0,0,0,.10);
+            transition: width .5s, height .5s, flex-basis .5s, margin-bottom .5s;
+            border-radius: 20px;
+        }
+
+        
+        @keyframes pb-price-pop {
+            0%,100% {transform: translateY(0) scale(1);}
+            38% {transform: translateY(-7px) scale(1.08);}
+            70% {transform: translateY(1px) scale(.98);}
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .PremiumBarGG-price { animation: none !important; }
+        }
+
+        /* ============================================================
+           FOUR STATES / ONE CONTROLLER
+           1. desktop collapsed: 600 x 100 outer, yellow 80
+           2. desktop expanded : 600 x 200 outer, white checker 180, yellow 200
+           3. mobile collapsed : 300 x 80 creative
+           4. mobile expanded  : 300 x 200 creative
+           The parent controls .is-expanded by postMessage; no :hover layout.
+           ============================================================ */
+        .PremiumBarGG { transition: height .5s ease, scale .5s ease; }
+        .PremiumBarGG::before { transition: height .5s ease; }
+        .PremiumBarGG-inner { transition: height .5s ease; }
+        .PremiumBarGG-button { transition: width .5s ease, left .5s ease, right .5s ease, opacity .25s ease; }
+        @media (min-width:600px) {
+            /* STATE 1 / DESKTOP COLLAPSED */
+            .PremiumBarGG:not(.is-expanded) { height:100px; }
+            .PremiumBarGG:not(.is-expanded)::before { height:60px; }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-inner { height:100px; }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-inner::before { height:80px; }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-video { height:100px; border-radius:15px 15px 0 0; }
+            /* STATE 2 / DESKTOP EXPANDED */
+            .PremiumBarGG.is-expanded { height:200px; }
+            .PremiumBarGG.is-expanded::before { height:180px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner,
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner::before { height:200px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-video { width:265px; flex-basis:265px; height:149px; margin-bottom:25px; border-radius:15px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-button { width:130px; height:auto; }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-button { width:90px; height:auto; }
+        }
+        @media (max-width:599px) {
+            /* STATE 3 / MOBILE COLLAPSED */
+            .PremiumBarGG:not(.is-expanded) { height:80px; }
+            .PremiumBarGG:not(.is-expanded)::before { height:60px; }
+			/* Мобильный, свернутый */
+			.PremiumBarGG:not(.is-expanded) .PremiumBarGG-inner {
+			    width: 300px;
+			    height: 80px;
+			    background: #EDFC36;
+			    border-radius: 20px 20px 0 0;
+			    overflow: hidden;	    
+}            
+			.PremiumBarGG:not(.is-expanded) .PremiumBarGG-about {
+			    height: 80px;
+			    background: transparent;
+			    border-radius: 0;
+			}
+			.PremiumBarGG:not(.is-expanded) .PremiumBarGG-video {
+			    width: 142px;
+			    height: 80px;
+			    left: 0;
+			    bottom: 0;
+			    border-radius: 0;
+			    overflow: hidden;
+			}
+
+			.PremiumBarGG:not(.is-expanded) .PremiumBarGG-video video {
+			    width: 100%;
+			    height: 100%;
+			    object-fit: cover;
+}			
+            /* STATE 4 / MOBILE EXPANDED */
+            .PremiumBarGG.is-expanded { height:200px; }
+            .PremiumBarGG.is-expanded::before { height:180px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner { height:200px; }
+        }
+
+        /* V3: fixed 200px iframe slot, creative is always bottom-aligned.
+           Mobile expanded creative stays entirely inside the 200px viewport. */
+        @media (max-width:599px) {
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner {
+                height: 200px;
+                display: block;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-video {
+                position: absolute;
+                top: 0px;
+                bottom: auto;
+                left: 25px;
+                width: 250px;
+                height: auto;
+                z-index: 2;
+                border-radius: 0 0 20px 20px;
+				overflow: hidden;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-video video {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-video {
+                top: auto;
+                bottom: 0;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-about { height: 200px; }
+        }
+
+        /* V4: precise clip boundary for content in expanded desktop state.
+           The price stays within 600x200; only text motion beyond the frame is clipped. */
+        @media (min-width:600px) {
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner {
+                overflow: hidden;
+                border-radius: 30px 30px 0 0;
+            }
+        }
+
+        /* ============================================================
+           DESKTOP EXPANDED: SEQUENTIAL CONTENT REVEAL
+           Change these three delays to adjust the pauses:
+             Title 1  0.25s
+             Title 2  0.75s
+             Button   1.25s
+           Animation duration is 0.4s for each element.
+           Animation restarts every time is-expanded is added.
+           Mobile appearance and collapsed desktop remain unchanged.
+           ============================================================ */
+        @media (min-width:600px) {
+            .PremiumBarGG.is-expanded {
+                --title1-delay: .25s;
+                --title2-delay: .45s;
+                --button-delay: 0.85s;
+                --content-reveal-duration: .4s;
+            }
+
+            .PremiumBarGG.is-expanded .PremiumBarGG-title1,
+            .PremiumBarGG.is-expanded .PremiumBarGG-title2 {
+                animation: pb-title-fade-up var(--content-reveal-duration) ease-out both;
+                transition: none;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-title1 {
+                animation-delay: var(--title1-delay);
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-title2 {
+                animation-delay: var(--title2-delay);
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-button {
+                animation: pb-button-fade var(--content-reveal-duration) ease-out both;
+                animation-delay: var(--button-delay);
+                transition: width .5s ease, left .5s ease, right .5s ease;
+            }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-title1,
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-title2,
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-button {
+                animation: none;
+            }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-button {
+                opacity: 1;
+            }
+        }
+        @keyframes pb-title-fade-up {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pb-button-fade {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .PremiumBarGG.is-expanded .PremiumBarGG-title1,
+            .PremiumBarGG.is-expanded .PremiumBarGG-title2,
+            .PremiumBarGG.is-expanded .PremiumBarGG-button {
+                animation: none;
+                opacity: 1;
+            }
+        }
+
+
+        /* ============================================================
+           COLLAPSED: PRICE DOUBLE PULSE
+           Starts 2 seconds after each collapse; plays twice and stops.
+           Does not affect the expanded-state price pop animation.
+           ============================================================ */
+        /* Animate independent scale, not transform: this preserves the
+           position set by the existing pb-price-pop animation. */
+        @keyframes pb-price-double-pulse {
+            0%, 50%, 100% { scale: 1; }
+            25%, 75% { scale: 1.08; }
+        }
+        .PremiumBarGG:not(.is-expanded) .PremiumBarGG-price,
+        .PremiumBarGG.PremiumBarGG-showup:not(.is-expanded) .PremiumBarGG-price {
+            animation: pb-price-double-pulse 1.2s ease-in-out 2s 1 both;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-price {
+                animation: none;
+            }
+        }
+
+	</style>
+
+</head>
+<body style="margin:0; padding:0; min-height:200px; display:flex; flex-direction:column; justify-content:flex-end;">
+	
+
+
+
+		<!-- banner START -->
+		<a href="" class="PremiumBarGG PremiumBarGG-showup is-expanded"  id="click-url">
+			<div class="PremiumBarGG-inner" id="inner">
+				<div class="PremiumBarGG-video">
+					<video autoplay muted loop playsinline>
+						<source src="img/video.mp4" type="video/mp4">
+					</video>
+					<button class="PremiumBarGG-mute mute-off" id="muteButton" aria-pressed="false" aria-label="Включить звук"></button>
+				</div>
+				<div class="PremiumBarGG-about">
+					<div class="PremiumBarGG-about-inner">
+						<div class="PremiumBarGG-logo"></div>
+						<div class="PremiumBarGG-title1" ></div>
+						<div class="PremiumBarGG-title2" ></div>						
+						<div class="PremiumBarGG-button"></div>
+						<div class="PremiumBarGG-price"></div>
+
+						<div class="PremiumBarGG-ligal">Реклама. Рекламодатель ООО «Корона», ИНН 7100042381</div>
+					</div>
+					<div class="PremiumBarGG-zeroplus"></div>
+
+				</div>
+	
+			</div>
+		</a>
+
+		<!-- banner END -->
+	<script>
+		(() => {
+		const target = document.querySelector('.PremiumBarGG');
+		if (!target) return;
+
+		let prev = 0;
+		function measure() {
+			const h = target.offsetHeight;
+			if (h > 0 && h !== prev) {
+			prev = h;
+			parent.postMessage({ type: 'premiumbar-resize', height: h }, '*');
+			}
+		}
+		new ResizeObserver(() => { measure(); }).observe(target);
+		measure();
+
+		})();
+	</script>		
+
+	<script src="gsap.min.js" defer></script>
+	<script src="ScrollTrigger.min.js" defer></script>
+	<script src="index.js" defer></script>
+</body>
+</html>
