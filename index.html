@@ -802,6 +802,95 @@
             }
         }
 
+
+        /* ============================================================
+           STABLE LAYOUT / SAFARI + MOBILE
+           The mobile yellow surface does not shift horizontally.
+           Both modes share the same 300px canvas; only height changes.
+           ============================================================ */
+        @media (max-width:599px) {
+            .PremiumBarGG-inner,
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner,
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-inner {
+                position: relative;
+                display: block;
+                flex: none;
+                width: 300px;
+                padding: 0;
+                margin-inline: auto;
+                background: var(--c1);
+                border-radius: 24px 24px 0 0;
+                overflow: visible;
+                transition: height .5s ease;
+            }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-inner { height: 80px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner { height: 200px; }
+            .PremiumBarGG-about,
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-about,
+            .PremiumBarGG.is-expanded .PremiumBarGG-about {
+                position: absolute;
+                left: 0;
+                right: auto;
+                top: 0;
+                bottom: auto;
+                margin: 0;
+                width: 300px;
+                padding: 0;
+                border-radius: 24px 24px 0 0;
+                background: transparent;
+                overflow: visible;
+                transition: height .5s ease;
+            }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-about { height: 80px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-about { height: 200px; }
+            .PremiumBarGG-about-inner { width: 100%; height: 100%; }
+            .PremiumBarGG-video,
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-video,
+            .PremiumBarGG.is-expanded .PremiumBarGG-video {
+                position: absolute;
+                z-index: 2;
+                margin: 0;
+                transition: width .5s ease, left .5s ease, top .5s ease, border-radius .5s ease;
+            }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-video {
+                top: 0;
+                bottom: auto;
+                left: 0;
+                width: 142px;
+                height: 80px;
+                border-radius: 24px 0 0 0;
+                overflow: hidden;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-video {
+                top: 0;
+                bottom: auto;
+                left: 25px;
+                width: 250px;
+                height: auto;
+                border-radius: 0 0 20px 20px;
+                overflow: hidden;
+            }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-logo { left:154px; }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-title1,
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-title2 { left:154px; }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-ligal {
+                left:154px;
+                width:135px;
+                bottom:4px;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-logo { left:20px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-title1,
+            .PremiumBarGG.is-expanded .PremiumBarGG-title2 { left:85px; }
+            .PremiumBarGG.is-expanded .PremiumBarGG-ligal { left:12px; width:204px; }
+            .PremiumBarGG:not(.is-expanded) .PremiumBarGG-button { opacity:0; }
+        }
+        @media (min-width:600px) {
+            /* Keep flex widths stable during Safari's animated reflow. */
+            .PremiumBarGG-inner { display:flex; flex-direction:row; align-items:flex-end; }
+            .PremiumBarGG-video { flex-shrink:0; min-width:0; }
+            .PremiumBarGG-about { flex-shrink:1; }
+        }
+
 	</style>
 
 </head>
