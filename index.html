@@ -884,11 +884,44 @@
             .PremiumBarGG.is-expanded .PremiumBarGG-ligal { left:12px; width:204px; }
             .PremiumBarGG:not(.is-expanded) .PremiumBarGG-button { opacity:0; }
         }
+        /* DESKTOP: STABLE HORIZONTAL GEOMETRY (Safari/macOS)
+           25px inset + video + about = 600px at EVERY animation frame.
+           No flex-grow/shrink rounding at the end of the transition. */
         @media (min-width:600px) {
-            /* Keep flex widths stable during Safari's animated reflow. */
-            .PremiumBarGG-inner { display:flex; flex-direction:row; align-items:flex-end; }
-            .PremiumBarGG-video { flex-shrink:0; min-width:0; }
-            .PremiumBarGG-about { flex-shrink:1; }
+            .PremiumBarGG-inner {
+                --pb-video-width: 178px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: row;
+                align-items: flex-end;
+                flex: none;
+                width: 600px;
+                min-width: 600px;
+                max-width: 600px;
+                padding-left: 25px;
+                margin-inline: auto;
+            }
+            .PremiumBarGG.is-expanded .PremiumBarGG-inner {
+                --pb-video-width: 265px;
+            }
+            .PremiumBarGG-video,
+            .PremiumBarGG.is-expanded .PremiumBarGG-video {
+                flex: 0 0 var(--pb-video-width);
+                width: var(--pb-video-width);
+                min-width: 0;
+                max-width: none;
+                transition: width .5s ease, flex-basis .5s ease,
+                            height .5s ease, margin-bottom .5s ease,
+                            border-radius .5s ease;
+            }
+            .PremiumBarGG-about,
+            .PremiumBarGG.is-expanded .PremiumBarGG-about {
+                flex: 0 0 calc(575px - var(--pb-video-width));
+                width: calc(575px - var(--pb-video-width));
+                min-width: 0;
+                max-width: none;
+                transition: width .5s ease, flex-basis .5s ease, height .5s ease;
+            }
         }
 
 	</style>
